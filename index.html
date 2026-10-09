@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:">
+<title>Blending Builder</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============================ top bar ============================ -->
+  <header class="topbar">
+    <button id="backBtn" class="navbtn focusable" hidden>◀ Back</button>
+    <div class="brand" id="brandLabel">Blending&nbsp;Builder</div>
+    <div class="stars" id="stars" aria-label="Stars earned"></div>
+    <button id="guideBtn" class="navbtn guide focusable" hidden>📘 Guide</button>
+    <button id="exitBtn" class="navbtn exit focusable" hidden>✕ Exit</button>
+    <button id="teacherBtn" class="gear" title="Teacher settings — hold the button down for 1 second (or press Ctrl+Shift+S)">⚙</button>
+  </header>
+
+  <!-- ============================ home ============================ -->
+  <section class="screen home-screen" id="screen-home">
+    <div class="home-tabs">
+      <button class="home-tab focusable dwell" id="tabLetters">🔤 Letters a–z</button>
+      <button class="home-tab focusable dwell" id="tabBlends">🧩 Blending sounds</button>
+    </div>
+    <h1 class="screen-title" id="homeTitle">Letters a–z — choose a letter</h1>
+    <div class="letter-grid" id="letterGrid"></div>
+  </section>
+
+  <!-- ============================ guide ============================ -->
+  <!-- The built-in user guide. Each <article class="guide-page"> is one page;
+       app.js only shows one at a time. To change the wording, edit the text
+       here — nothing else needs touching. To add a page, copy an article. -->
+  <section class="screen guide-screen" id="screen-guide" hidden>
+    <div class="guide-card" id="guideDeck">
+
+      <article class="guide-page guide-cover">
+        <img class="guide-logo" src="logo.png" alt="Sarasas Witaed Rangsit School crest">
+        <div class="guide-cover-text">
+          <h2>Blending Builder</h2>
+          <p class="guide-sub">Phonics &amp; first reading for KG&nbsp;3 — ages 5 to 6</p>
+          <p class="guide-by">Made by <b>Teacher&nbsp;Marc</b></p>
+          <p class="guide-school">Sarasas Witaed Rangsit School</p>
+          <p class="guide-tip">Press <b>▶</b> to turn the page.</p>
+        </div>
+      </article>
+
+      <article class="guide-page guide-book-page" hidden>
+        <h3 class="guide-h"><span>📘</span> The whole book is in here</h3>
+        <div class="guide-split">
+          <figure class="guide-book-fig">
+            <img class="guide-book" src="kg3-phonics-book.jpg"
+                 alt="The KG3 PHONICS book for Kindergarten 3 by Sarasas Ektra School">
+            <figcaption>KG3 PHONICS</figcaption>
+          </figure>
+          <div class="guide-split-main">
+            <p class="guide-lead">Nothing has been left out. The program follows
+              the <b>KG3 PHONICS</b> book in the book's own order, so a child can
+              practise on the computer exactly what the class is doing in print.</p>
+            <ul class="guide-list guide-steps-tight">
+              <li><b>46 units</b> — all 26 letters, the digraphs
+                <b>ch, sh, th, wh</b>, and all 16 blending sounds.</li>
+              <li><b>188 picture words</b> — the book's own vocabulary, with a
+                picture for every word.</li>
+              <li><b>46 stories</b> — built from the book's tongue-twisters and
+                sentences.</li>
+            </ul>
+            <p class="guide-note">A child who has done a page in the book meets
+              the same letters, words and pictures here — just in a game they can
+              play on their own.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="guide-page" hidden>
+        <h3 class="guide-h"><span>🕹️</span> Driving with the joystick</h3>
+        <div class="guide-split">
+          <figure class="guide-stick-fig">
+            <div class="guide-stick-wrap">
+              <img class="guide-stick" src="joystick.png"
+                   alt="The joystick: a big red ball on a black box with one green button">
+            </div>
+            <figcaption>Designed, built, wired and coded by Teacher&nbsp;Marc</figcaption>
+          </figure>
+          <div class="guide-split-main">
+            <ol class="guide-steps">
+              <li><b class="guide-dot-red">Hold the red stick</b> and push it
+                <b>left, right, up or down</b>. The orange ring hops that way.</li>
+              <li><b class="guide-dot-green">Press the green button.</b> Whatever
+                the ring is sitting on opens.</li>
+              <li><b>◀ Back</b> (or <b>Escape</b>) steps back.</li>
+            </ol>
+            <p class="guide-note"><b>Why a joystick?</b> Young children's hand
+              muscles are still developing, so aiming a mouse and clicking at the
+              same time is hard for them. This joystick was built for them: a big
+              stick to push and one big button to press — nothing to aim at, and
+              each move clicks so they can feel it.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="guide-page" hidden>
+        <h3 class="guide-h"><span>🔡</span> Choosing a letter</h3>
+        <p class="guide-lead">The first screen has two big buttons at the top, the
+          same two parts as the KG3 PHONICS book: <b>Letters a–z</b> (a to z plus
+          <b>ch, sh, th, wh</b>) and <b>Blending sounds</b> (<b>ag, am, an, ap, at,
+          ar, ed/eg, en, et, er, in, og, op, ot, ub/up, ug</b>).</p>
+        <ul class="guide-list">
+          <li>Drive to a letter and press the button.</li>
+          <li>Each letter has three activities, in this order:
+            <b>Story → Find → Make</b>, plus extra games: <b>Match, Word,
+            Picture, Sound</b> and <b>Memory</b>.</li>
+          <li>Finish the Make game and the letter earns a <b>⭐</b> on the grid,
+            so you can see at a glance where a child is up to.</li>
+        </ul>
+        <p class="guide-note">Stars are saved on this computer. You can clear
+          them any time in Teacher Settings.</p>
+      </article>
+
+      <article class="guide-page" hidden>
+        <h3 class="guide-h"><span>📖</span> 1. Story</h3>
+        <ul class="guide-list">
+          <li><b>You read it out loud.</b> There is no recorded voice on
+            purpose — your voice teaches better than a machine.</li>
+          <li>The <b class="guide-red">red words</b> carry the letter sound.
+            Stretch them: <i>“a… a… ant”</i>.</li>
+          <li>Every page is <b>one whole picture</b> of what is happening, so
+            children follow the story before they can read it.</li>
+          <li>Joystick <b>left / right</b> turns the page. The last page leads
+            straight into Find.</li>
+        </ul>
+      </article>
+
+      <article class="guide-page" hidden>
+        <h3 class="guide-h"><span>👆</span> 2. Find</h3>
+        <ul class="guide-list">
+          <li>Pictures appear. The child picks every one that <b>has the
+            sound</b> in it.</li>
+          <li>The counter shows how many are <b>still to find</b>.</li>
+          <li>A wrong pick just <b>wobbles</b>. Nothing is lost, no sad noise,
+            nobody fails.</li>
+        </ul>
+        <p class="guide-note">Ask the child to <b>say the word out loud</b>
+          before pressing. That is where the listening happens.</p>
+      </article>
+
+      <article class="guide-page" hidden>
+        <h3 class="guide-h"><span>🔤</span> 3. Make</h3>
+        <p class="guide-lead">A picture, a row of empty boxes, and the letters
+          jumbled underneath. The child puts them <b>in the right order</b>.</p>
+        <ul class="guide-list">
+          <li><b>Drag</b> — hold the button on a letter, drive it to a box, let go.</li>
+          <li><b>Pick up &amp; drop</b> — press once to lift a letter, drive to a
+            box, press again to drop it. No holding needed.</li>
+          <li>Digraphs stay together on one tile, so <b>sh‑i‑p</b> is three
+            tiles, not four.</li>
+        </ul>
+      </article>
+
+      <article class="guide-page" hidden>
+        <h3 class="guide-h"><span>🔗</span> 4. Match</h3>
+        <p class="guide-lead">Four pictures from the book page across the top,
+          their words jumbled underneath. The child joins each picture to
+          its word.</p>
+        <ul class="guide-list">
+          <li>Press the button on a <b>picture</b> — it lights up and the ring
+            jumps down to the words.</li>
+          <li>Press the button on its <b>word</b>. Right: a line joins them and
+            the word is read out. Wrong: it just wobbles.</li>
+          <li>Starting from a word works too. <b>Play again</b> deals new
+            pictures.</li>
+        </ul>
+        <p class="guide-note">The words are not read out until they are matched,
+          so the child has to <b>read</b> them.</p>
+      </article>
+
+      <article class="guide-page" hidden>
+        <h3 class="guide-h"><span>🎲</span> More games</h3>
+        <ul class="guide-list">
+          <li><b>📝 Word</b> — one big picture, three words. Pick the word that
+            goes with the picture.</li>
+          <li><b>🖼️ Picture</b> — one word, three pictures. Read the word, pick
+            its picture. 🔊 reads the word out if a child needs help.</li>
+          <li><b>👂 Sound</b> — three pictures, only one has the sound
+            (<i>“Which picture starts with c?”</i>).</li>
+          <li><b>🃏 Memory</b> — eight cards face down. Turn two at a time to
+            find each picture and its word.</li>
+        </ul>
+        <p class="guide-note">A wrong pick just wobbles. Each finished game earns
+          a <b>⭐</b>, then <b>Play again</b> deals new pictures.</p>
+      </article>
+
+      <article class="guide-page" hidden>
+        <h3 class="guide-h"><span>⚙️</span> Teacher Settings</h3>
+        <p class="guide-lead">Two ways in, both made for adults:</p>
+        <ul class="guide-list">
+          <li><b>Hold</b> the ⚙ in the corner for <b>1 second</b>.</li>
+          <li>Or press <b>Ctrl + Shift + S</b> — instant, and easiest with a
+            joystick.</li>
+        </ul>
+        <p class="guide-note">A quick click does nothing, so a child cannot
+          wander in by accident.</p>
+        <p class="guide-lead">Inside you can set the number of spare letters in
+          the tray, how many pictures Find shows, lowercase or UPPERCASE, word
+          labels, dwell select and its speed, the computer voice (off by
+          default), and <b>Reset stars</b>.</p>
+        <p class="guide-note"><b>Teacher keys:</b> <b>Ctrl+Shift+S</b> settings ·
+          <b>Ctrl+Shift+Q</b> quit · <b>F11</b> fullscreen.</p>
+      </article>
+
+      <article class="guide-page" hidden>
+        <h3 class="guide-h"><span>⏱️</span> A 15 minute lesson</h3>
+        <ol class="guide-steps guide-steps-tight">
+          <li><b>Warm up — 2 min.</b> Say the sound together three times.
+            Make it big: <i>“sss… snake!”</i></li>
+          <li><b>Story — 5 min.</b> Read it slowly. Point at the picture and
+            ask <i>“what can you see?”</i> before you turn the page.</li>
+          <li><b>Find — 3 min.</b> Make them say the word <i>before</i> they
+            press the button.</li>
+          <li><b>Make — 5 min.</b> Sound each letter as it drops into its box,
+            then blend the whole word together.</li>
+        </ol>
+        <p class="guide-note">One letter a day works well. Keep Friday for
+          going back over the letters already starred.</p>
+      </article>
+
+    </div>
+    <div class="story-nav">
+      <button class="bigbtn focusable" id="guidePrev">◀</button>
+      <div class="story-dots" id="guideDots"></div>
+      <button class="bigbtn focusable" id="guideNext">▶</button>
+    </div>
+  </section>
+
+  <!-- ============================ letter menu ============================ -->
+  <section class="screen" id="screen-letter" hidden>
+    <div class="letter-head">
+      <div class="letter-pic" id="letterPic">🍎</div>
+      <div class="letter-big" id="letterBig">Aa</div>
+      <div class="letter-keyword" id="letterKeyword">apple</div>
+    </div>
+    <div class="menu-cards">
+      <button class="menu-card blue focusable" data-go="story">
+        <span class="menu-label">Story</span>
+        <span class="menu-icon" data-pic="&#x1F4D6;">📖</span>
+      </button>
+      <button class="menu-card yellow focusable" data-go="find">
+        <span class="menu-label">Find</span>
+        <span class="menu-icon" data-pic="&#x1F446;">👆</span>
+      </button>
+      <button class="menu-card green focusable" data-go="make">
+        <span class="menu-label">Make</span>
+        <span class="menu-icon" data-pic="&#x1F524;">🔤</span>
+      </button>
+      <button class="menu-card purple focusable" data-go="match">
+        <span class="menu-label">Match</span>
+        <span class="menu-icon" data-pic="&#x1F517;">🔗</span>
+      </button>
+      <button class="menu-card pink focusable" data-go="word">
+        <span class="menu-label">Word</span>
+        <span class="menu-icon" data-pic="&#x1F4DD;">📝</span>
+      </button>
+      <button class="menu-card orange focusable" data-go="picture">
+        <span class="menu-label">Picture</span>
+        <span class="menu-icon" data-pic="&#x1F5BC;&#xFE0F;">🖼️</span>
+      </button>
+      <button class="menu-card teal focusable" data-go="sound">
+        <span class="menu-label">Sound</span>
+        <span class="menu-icon" data-pic="&#x1F442;">👂</span>
+      </button>
+      <button class="menu-card red focusable" data-go="memory">
+        <span class="menu-label">Memory</span>
+        <span class="menu-icon" data-pic="&#x1F0CF;">🃏</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================ story ============================ -->
+  <section class="screen story-screen" id="screen-story" hidden>
+    <div class="story-card">
+      <div class="story-pic" id="storyPic"></div>
+      <div class="story-text">
+        <h2 class="story-title" id="storyTitle"></h2>
+        <div class="hunt-bar" id="huntBar" hidden>
+          <span class="hunt-target" id="huntTarget">c</span>
+          <span class="hunt-text" id="huntText">Find 3</span>
+          <span class="hunt-left" id="huntLeft"></span>
+        </div>
+        <p class="story-line" id="storyLine"></p>
+      </div>
+    </div>
+    <div class="story-nav">
+      <button class="bigbtn focusable" id="storyPrev">◀</button>
+      <div class="story-dots" id="storyDots"></div>
+      <button class="bigbtn focusable" id="storyNext">▶</button>
+      <button class="bigbtn wide read-btn focusable" id="readBtn" hidden>🔊 Read to me</button>
+      <button class="bigbtn wide hunt-btn focusable" id="huntBtn">🔍 Letter hunt</button>
+    </div>
+    <p class="teacher-note" id="storyNote">Read this aloud. The <b>highlighted</b> words have the letter sound in them.</p>
+  </section>
+
+  <!-- ============================ find ============================ -->
+  <section class="screen" id="screen-find" hidden>
+    <div class="find-head">
+      <div class="find-target" id="findTarget">a</div>
+      <div class="find-prompt" id="findPrompt">Find the pictures with this sound</div>
+      <div class="find-counter">
+        <span class="find-counter-label">Still to find</span>
+        <span class="find-counter-num" id="findCount">3</span>
+      </div>
+    </div>
+    <div class="find-grid" id="findGrid"></div>
+  </section>
+
+  <!-- ============================ match ============================ -->
+  <section class="screen match-screen" id="screen-match" hidden>
+    <div class="find-head">
+      <div class="find-target" id="matchTarget">a</div>
+      <div class="find-prompt" id="matchPrompt">Match each picture to its word</div>
+      <div class="find-counter">
+        <span class="find-counter-label">Still to match</span>
+        <span class="find-counter-num" id="matchCount">4</span>
+      </div>
+    </div>
+    <div class="match-board" id="matchBoard">
+      <svg class="match-lines" id="matchLines" aria-hidden="true"></svg>
+      <div class="match-row" id="matchPics"></div>
+      <div class="match-row" id="matchWords"></div>
+    </div>
+    <div class="match-end" id="matchEnd" hidden>
+      <button class="bigbtn wide focusable" id="matchAgain">🔁 Play again</button>
+      <button class="bigbtn wide focusable" id="matchDone">✔ Finished</button>
+    </div>
+  </section>
+
+  <!-- ============================ quiz: Word / Picture / Sound ============================ -->
+  <section class="screen quiz-screen" id="screen-quiz" hidden>
+    <div class="find-head">
+      <div class="find-target" id="quizTarget">a</div>
+      <div class="find-prompt" id="quizPrompt">Which word is it?</div>
+      <div class="find-counter">
+        <span class="find-counter-label">Still to do</span>
+        <span class="find-counter-num" id="quizCount">5</span>
+      </div>
+    </div>
+    <div class="quiz-question" id="quizQuestion"></div>
+    <div class="quiz-options" id="quizOptions"></div>
+    <div class="match-end" id="quizEnd" hidden>
+      <button class="bigbtn wide focusable" id="quizAgain">🔁 Play again</button>
+      <button class="bigbtn wide focusable" id="quizDone">✔ Finished</button>
+    </div>
+  </section>
+
+  <!-- ============================ memory pairs ============================ -->
+  <section class="screen memory-screen" id="screen-memory" hidden>
+    <div class="find-head">
+      <div class="find-target" id="memTarget">a</div>
+      <div class="find-prompt">Turn over two cards. Find each picture and its word.</div>
+      <div class="find-counter">
+        <span class="find-counter-label">Pairs to find</span>
+        <span class="find-counter-num" id="memCount">4</span>
+      </div>
+    </div>
+    <div class="mem-grid" id="memGrid"></div>
+    <div class="match-end" id="memEnd" hidden>
+      <button class="bigbtn wide focusable" id="memAgain">🔁 Play again</button>
+      <button class="bigbtn wide focusable" id="memDone">✔ Finished</button>
+    </div>
+  </section>
+
+  <!-- ============================ make ============================ -->
+  <section class="screen make-screen" id="screen-make" hidden>
+    <button id="pictureCard" class="picture dwell focusable" aria-label="Show the word">
+      <span id="pictureEmoji">🐱</span>
+    </button>
+    <div class="word-slots" id="wordSlots"></div>
+    <div class="letter-tray" id="letterTray"></div>
+    <div class="banner" id="banner">Drag the letters into the boxes!</div>
+  </section>
+
+  <footer class="hint" id="hint"></footer>
+  <div class="confetti-layer" id="confetti" aria-hidden="true"></div>
+</div>
+
+<!-- ============================ quit confirm ============================ -->
+<div class="modal-backdrop" id="exitModal" hidden>
+  <div class="modal exit-modal" role="dialog" aria-label="Close the program">
+    <h2>Close Blending Builder?</h2>
+    <div class="modal-actions exit-actions">
+      <button id="exitCancelBtn" class="btn big-btn focusable">No, keep playing</button>
+      <button id="exitYesBtn" class="btn big-btn danger focusable">Yes, close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ teacher settings ============================ -->
+<div class="modal-backdrop" id="teacherModal" hidden>
+  <div class="modal" role="dialog" aria-label="Teacher settings">
+    <h2>Teacher Settings</h2>
+
+    <label class="row">
+      <span>Extra letters in the tray</span>
+      <select id="extrasSelect">
+        <option value="0">0 (easiest)</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3 (hardest)</option>
+      </select>
+    </label>
+
+    <label class="row">
+      <span>Pictures in Find game</span>
+      <select id="findSizeSelect">
+        <option value="4">4</option>
+        <option value="6">6</option>
+        <option value="8">8</option>
+      </select>
+    </label>
+
+    <label class="row">
+      <span>Picture style</span>
+      <select id="picStyleSelect">
+        <option value="3d">3D cartoon</option>
+        <option value="flat">Flat drawings</option>
+      </select>
+    </label>
+
+    <label class="row">
+      <span>Letter case</span>
+      <select id="caseSelect">
+        <option value="lower">lowercase</option>
+        <option value="upper">UPPERCASE</option>
+      </select>
+    </label>
+
+    <label class="row">
+      <span>Show the word under each picture</span>
+      <input type="checkbox" id="labelsToggle">
+    </label>
+
+    <label class="row">
+      <span>Dwell select (hover to click)</span>
+      <input type="checkbox" id="dwellToggle">
+    </label>
+
+    <label class="row">
+      <span>Dwell time</span>
+      <select id="dwellTimeSelect">
+        <option value="800">0.8 s</option>
+        <option value="1200">1.2 s</option>
+        <option value="1600">1.6 s</option>
+        <option value="2200">2.2 s</option>
+      </select>
+    </label>
+
+    <h3 class="group-head">Computer voice</h3>
+    <p class="group-note">Off by default — you read the story and the sounds yourself.
+      When it is on, the computer sounds out letters and words in the games, and a
+      <b>🔊 Read to me</b> button appears on the story pages. Pick a <b>Thai</b> voice
+      (e.g. Premwadee, Niwat) to hear the English read with a Thai accent.</p>
+
+    <label class="row">
+      <span>Use the computer voice</span>
+      <input type="checkbox" id="voiceToggle">
+    </label>
+
+    <label class="row">
+      <span>Voice</span>
+      <select id="voiceSelect"></select>
+    </label>
+
+    <label class="row">
+      <span>Speech speed</span>
+      <select id="rateSelect">
+        <option value="0.6">Very slow</option>
+        <option value="0.8">Slow</option>
+        <option value="1">Normal</option>
+      </select>
+    </label>
+
+    <div class="row voice-test">
+      <button id="voiceTestBtn" class="btn ghost" type="button">▶ Test the voice</button>
+      <span id="voiceStatus" class="voice-status"></span>
+    </div>
+
+
+    <div class="modal-actions">
+      <button id="resetScoreBtn" class="btn ghost">Reset stars</button>
+      <button id="closeTeacherBtn" class="btn">Done</button>
+    </div>
+    <p class="modal-note">
+      Joystick: use <b>Arrow Key Mode</b> for the simplest control, or <b>Mouse Mode</b>
+      with dwell select for children who cannot aim and click at the same time.
+      Teacher keys: <b>Ctrl+Shift+S</b> open these settings, <b>Ctrl+Shift+Q</b> quit, <b>F11</b> fullscreen.
+    </p>
+  </div>
+</div>
+
+<script src="alphabet.js"></script>
+<script src="art.js"></script>
+<script src="pics3d.js"></script>
+<script src="scene.js"></script>
+<script src="speech.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

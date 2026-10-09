@@ -1,0 +1,56 @@
+{
+  "name": "blending-builder",
+  "version": "3.2.0",
+  "description": "Joystick-friendly phonics program matched to the KG3 PHONICS book: letters a-z, digraphs and blending sounds",
+  "main": "main.js",
+  "author": "Marc",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable nsis",
+    "protect": "node protect.js",
+    "installer": "call \"C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe\" installer.iss"
+  },
+  "devDependencies": {
+    "electron": "^32.2.0",
+    "electron-builder": "^25.1.8",
+    "javascript-obfuscator": "^5.9.0"
+  },
+  "build": {
+    "appId": "com.marc.blendingbuilder",
+    "productName": "Blending Builder",
+    "files": [
+      "main.js",
+      "index.html",
+      "styles.css",
+      "app.js",
+      "alphabet.js",
+      "art.js",
+      "pics3d.js",
+      "pics/**/*",
+      "scene.js",
+      "speech.js",
+      "Start Blending Builder.bat",
+      "icon.ico",
+      "logo.png",
+      "joystick.png",
+      "kg3-phonics-book.jpg"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "icon.ico"
+    },
+    "publish": null,
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  },
+  "allowScripts": {
+    "electron@32.3.3": true
+  }
+}

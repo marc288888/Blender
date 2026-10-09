@@ -1,0 +1,1052 @@
+:root {
+  --bg: #0f2a4a;
+  --bg2: #16406e;
+  --card: #ffffff;
+  --ink: #16314f;
+  --accent: #ffc233;
+  --good: #38c172;
+  --bad: #ff7a7a;
+  --focus: #ff8c1a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Century Gothic", "Comic Sans MS", "Segoe UI Rounded", "Trebuchet MS", sans-serif;
+  background: radial-gradient(circle at 50% 0%, var(--bg2), var(--bg));
+  color: #fff;
+  user-select: none;
+  cursor: default;
+}
+
+#app { height: 100%; display: flex; flex-direction: column; }
+
+/* ---------------------------------------------------------------- top bar */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 18px;
+  background: rgba(0, 0, 0, 0.2);
+  flex: 0 0 auto;
+}
+
+.brand { margin-right: auto; font-size: 20px; opacity: 0.75; }
+.stars { font-size: 24px; letter-spacing: 2px; }
+
+.navbtn {
+  border: none;
+  border-radius: 14px;
+  padding: 10px 20px;
+  font-size: 20px;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.navbtn:hover { background: rgba(255, 255, 255, 0.3); }
+.navbtn.exit { background: rgba(214, 71, 71, 0.35); }
+.navbtn.exit:hover { background: rgba(214, 71, 71, 0.6); }
+.navbtn.guide { background: rgba(70, 160, 214, 0.35); }
+.navbtn.guide:hover { background: rgba(70, 160, 214, 0.6); }
+
+/* Quit confirm — two big targets, nothing small to aim at. */
+.exit-modal { text-align: center; }
+.exit-modal h2 { font-size: 30px; margin-bottom: 26px; }
+.exit-actions { justify-content: center; gap: 18px; flex-wrap: wrap; }
+.big-btn { font-size: 28px; padding: 26px 44px; border-radius: 18px; }
+.btn.danger { background: #d64747; color: #fff; }
+.btn.danger:hover { background: #c03a3a; }
+
+.gear {
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  border: none;
+  font-size: 24px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+}
+.gear.holding { background: rgba(255, 255, 255, 0.3); }
+.gear.holding::after {
+  content: "";
+  position: absolute; left: 0; bottom: 0;
+  height: 6px; width: 0;
+  background: var(--accent);
+  animation: fill 1s linear forwards;
+}
+@keyframes fill { to { width: 100%; } }
+
+/* ---------------------------------------------------------------- screens */
+.screen {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2vh;
+  padding: 1.5vh 2vw;
+  min-height: 0;
+}
+.screen[hidden] { display: none; }
+
+.screen-title { font-size: 3.4vh; margin: 0; opacity: 0.85; font-weight: normal; }
+
+/* keyboard / joystick focus ring, shared by every selectable thing */
+.focusable.key-focus {
+  outline: 6px solid var(--focus);
+  outline-offset: 4px;
+}
+
+/* ---------------------------------------------------------------- home grid */
+.home-screen { justify-content: stretch; gap: 1.2vh; }
+
+/* The two parts of the book: Letters a–z and Blending sounds. */
+.home-tabs {
+  display: flex;
+  gap: 1.6vw;
+  justify-content: center;
+  padding: 8px 8px 0;
+  flex: 0 0 auto;
+}
+.home-tab {
+  font-family: inherit;
+  font-size: min(3.6vh, 2.4vw);
+  font-weight: bold;
+  padding: 1.1vh 2.6vw;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+.home-tab.on { background: var(--accent); color: var(--ink); }
+
+/* Blending sounds: 16 bigger tiles, 8 across. */
+.letter-grid.blend-grid {
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.letter-tile.blend { background: #fff7df; }
+.letter-tile.blend.done { background: #d9f3e4; }
+.blend-grid .letter-tile .tile-emoji.drawn-pic {
+  width: min(19vh, 8.4vw); height: min(19vh, 8.4vw);
+}
+.blend-grid .letter-tile .tile-letter { font-size: min(9vh, 5vw); white-space: nowrap; }
+.blend-grid .letter-tile .tile-letter.two { font-size: min(6.4vh, 3.3vw); }
+
+.letter-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 1.1vh 0.8vw;
+  width: 100%;
+  flex: 1 1 auto;
+  align-content: stretch;
+  /* room for the focus ring, which sits outside the tile */
+  padding: 8px 8px 10px;
+  min-height: 0;
+}
+
+.letter-tile {
+  background: var(--card);
+  color: var(--ink);
+  border: none;
+  border-radius: 18px;
+  padding: 0.6vh 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6vh;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+  font-family: inherit;
+  min-height: 0;
+  transition: transform 0.1s ease;
+}
+.letter-tile:hover { transform: translateY(-3px); }
+/* Sized against both the tile width and the tile height, so the cards fill
+   the screen on a short classroom laptop as well as a big display. */
+.letter-tile .tile-emoji { font-size: min(11vh, 6.2vw); line-height: 1.05; }
+.letter-tile .tile-letter { font-size: min(8vh, 4.6vw); font-weight: bold; line-height: 1; }
+.letter-tile.done { background: #d9f3e4; }
+
+/* A hand-drawn picture takes the place of the emoji. The box keeps the
+   same size the emoji had, and the drawing fills it. */
+.drawn-pic { display: block; }
+.drawn-pic svg { display: block; width: 100%; height: 100%; }
+.letter-tile .tile-emoji.drawn-pic {
+  width: min(11vh, 6.2vw); height: min(11vh, 6.2vw);
+}
+.letter-pic.drawn-pic { width: 19vh; height: 19vh; flex: 0 0 auto; }
+.find-item .fi-emoji.drawn-pic { width: 9.6vh; height: 9.6vh; }
+.picture .drawn-pic { width: 84%; height: 84%; }
+.menu-icon.drawn-pic { width: 11vh; height: 11vh; }
+
+.letter-tile.done::after {
+  content: "⭐";
+  position: absolute; top: 4px; right: 7px; font-size: min(3vh, 1.7vw);
+}
+
+/* ---------------------------------------------------------------- letter menu */
+.letter-head {
+  display: flex;
+  align-items: center;
+  gap: 3vw;
+  flex: 0 0 auto;
+}
+.letter-pic { font-size: 14vh; line-height: 1; }
+.letter-big { white-space: nowrap; font-size: 18vh; line-height: 1; font-weight: bold; }
+.letter-keyword { font-size: 4vh; opacity: 0.8; }
+
+.menu-cards { display: flex; gap: 3vw; flex: 0 0 auto; }
+
+.menu-card {
+  width: 24vh; min-width: 170px;
+  height: 30vh; min-height: 200px;
+  border: 8px solid;
+  border-radius: 22px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5vh;
+  font-family: inherit;
+  color: var(--ink);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.1s ease;
+}
+.menu-card:hover { transform: translateY(-4px); }
+.menu-label { font-size: 4.6vh; }
+.menu-icon { font-size: 8vh; line-height: 1; }
+.menu-card.blue   { background: #dff1fb; border-color: #2fa3d6; }
+.menu-card.yellow { background: #fdf6d8; border-color: #ecc43a; }
+.menu-card.green  { background: #e2f3d8; border-color: #6cbb3c; }
+.menu-card.purple { background: #efe4fb; border-color: #9b6ad6; }
+.menu-card.pink   { background: #fde4ef; border-color: #e0609a; }
+.menu-card.orange { background: #fdebdc; border-color: #f08a3a; }
+.menu-card.teal   { background: #dcf5f1; border-color: #2bb3a0; }
+.menu-card.red    { background: #fde2e0; border-color: #e0534a; }
+
+/* Eight activities: two rows of four, the book's three first. */
+.menu-cards {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 2.4vh 2.4vw;
+  justify-content: center;
+}
+.menu-cards .menu-card {
+  width: min(24vh, 19vw); min-width: 0;
+  height: min(22vh, 17vw); min-height: 0;
+  border-width: 7px;
+  gap: 1vh;
+}
+.menu-cards .menu-label { font-size: min(4vh, 3vw); }
+.menu-cards .menu-icon { font-size: min(8vh, 6vw); }
+.menu-cards .menu-icon.drawn-pic { width: min(9vh, 7vw); height: min(9vh, 7vw); }
+#screen-letter .letter-pic { font-size: 11vh; }
+#screen-letter .letter-pic.drawn-pic { width: 14vh; height: 14vh; }
+#screen-letter .letter-big { font-size: 14vh; }
+
+/* ---------------------------------------------------------------- guide
+
+   The built-in user guide. One page shown at a time inside a fixed-height
+   card, so turning the page never makes the layout jump about. */
+.guide-screen { justify-content: center; }
+
+.guide-card {
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 24px;
+  padding: 3vh 3.2vw;
+  /* Width tracks the height so the vh-based text always wraps to the same
+     number of lines, whatever the screen size. A fixed px cap here made tall
+     screens overflow. */
+  width: min(93vw, 150vh);
+  height: 64vh;
+  box-shadow: 0 10px 0 rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.guide-page {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;   /* safety net on a very short screen */
+  display: flex;
+  flex-direction: column;
+  gap: 1.6vh;
+  animation: scene-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.guide-page[hidden] { display: none; }
+
+.guide-h {
+  margin: 0;
+  font-size: 3.6vh;
+  color: #2f6fa8;
+  display: flex;
+  align-items: center;
+  gap: 1.2vw;
+}
+.guide-h span { font-size: 5vh; line-height: 1; }
+
+.guide-lead { margin: 0; font-size: 2.5vh; line-height: 1.45; }
+
+.guide-list, .guide-steps {
+  margin: 0;
+  padding-left: 1.3em;
+  font-size: 2.5vh;
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+}
+.guide-steps-tight { gap: 0.9vh; font-size: 2.35vh; }
+
+/* A quiet aside for the grown-up reading over the child's shoulder. */
+.guide-note {
+  margin: 0;
+  font-size: 2.2vh;
+  line-height: 1.45;
+  background: #eef6fc;
+  border-left: 5px solid #2fa3d6;
+  border-radius: 10px;
+  padding: 1.2vh 1.4vw;
+}
+.guide-red {
+  color: #c0392b;
+  background: #ffe9a8;
+  border-radius: 6px;
+  padding: 0 5px;
+}
+
+/* cover page */
+.guide-cover {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 3.5vw;
+  text-align: left;
+}
+.guide-logo { width: 30vh; height: 30vh; object-fit: contain; flex: 0 0 auto; }
+.guide-cover h2 { margin: 0; font-size: 5.4vh; color: #2f6fa8; }
+.guide-sub { margin: 0.6vh 0 0; font-size: 2.6vh; }
+.guide-by { margin: 2.2vh 0 0; font-size: 3vh; }
+.guide-school { margin: 0.4vh 0 0; font-size: 2.4vh; color: #5a7996; }
+.guide-tip { margin: 2.6vh 0 0; font-size: 2.2vh; color: #5a7996; }
+
+/* the joystick photo, cropped in from the white backdrop of the original */
+.guide-split {
+  display: flex;
+  align-items: center;
+  gap: 2.6vw;
+}
+.guide-split .guide-steps { flex: 1 1 auto; }
+.guide-split-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4vh;
+}
+.guide-stick-fig { margin: 0; flex: 0 0 auto; width: 34vh; display: flex; flex-direction: column; gap: 0.8vh; }
+.guide-stick-wrap {
+  position: relative;
+  width: 34vh;
+  height: calc(34vh / 1.4286);
+  overflow: hidden;
+  border-radius: 14px;
+  border: 0.4vh solid #2fa3d6;
+  background: #fff;
+}
+.guide-stick {
+  position: absolute;
+  width: 216%;
+  height: auto;
+  left: -48%;
+  top: -24.3%;
+}
+.guide-stick-fig figcaption {
+  font-size: 1.9vh;
+  color: #5a7996;
+  text-align: center;
+  font-style: italic;
+}
+
+/* the KG3 PHONICS book cover, photographed and trimmed to the cover alone */
+.guide-book-fig {
+  margin: 0;
+  flex: 0 0 auto;
+  width: 25vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+}
+.guide-book {
+  width: 100%;
+  height: auto;
+  max-height: 58vh;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 0.4vh solid #2fa3d6;
+  background: #fff;
+  box-shadow: 0 0.8vh 2vh rgba(15, 42, 74, 0.25);
+}
+.guide-book-fig figcaption {
+  font-size: 1.9vh;
+  color: #5a7996;
+  text-align: center;
+  font-style: italic;
+}
+/* This page carries a tall picture, so it runs a little tighter than the rest. */
+.guide-book-page .guide-lead { font-size: 2.3vh; }
+.guide-book-page .guide-list { font-size: 2.2vh; }
+.guide-book-page .guide-note { font-size: 2.05vh; }
+/* little coloured markers tying the steps to the real hardware */
+.guide-dot-red::before, .guide-dot-green::before {
+  content: "";
+  display: inline-block;
+  width: 1.5vh; height: 1.5vh;
+  border-radius: 50%;
+  margin-right: 0.6vh;
+  vertical-align: baseline;
+}
+.guide-dot-red::before { background: #d63b36; }
+.guide-dot-green::before { background: #45b649; }
+
+/* ---------------------------------------------------------------- story */
+.story-screen { justify-content: center; gap: 1.4vh; padding-bottom: 0.6vh; }
+
+.story-card {
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 24px;
+  padding: 2vh 3vw;
+  width: auto;
+  max-width: 94vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+  box-shadow: 0 10px 0 rgba(0, 0, 0, 0.25);
+}
+/* the story picture — one little scene per page */
+.story-pic {
+  font-size: 16vh;
+  line-height: 1;
+  min-height: 34vh;
+  margin-bottom: 1.5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6vw;
+  flex-wrap: nowrap;
+}
+.story-pic.crowded { font-size: 13vh; }
+.scene-bit {
+  display: inline-block;
+  animation: scene-pop 0.34s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+/* Hand-drawn cartoon pictures (art.js). Square box so the drawing never
+   squashes, sized so three of them still fit side by side. */
+.scene-bit.drawn {
+  width: min(34vh, 27vw);
+  height: min(34vh, 27vw);
+}
+.story-pic.crowded .scene-bit.drawn {
+  width: min(31vh, 23vw);
+  height: min(31vh, 23vw);
+}
+.scene-bit.drawn svg { width: 100%; height: 100%; display: block; }
+
+/* One whole illustrated picture for the page, in a white storybook frame. */
+.story-pic.framed {
+  min-height: 0;
+  margin-bottom: 0;
+  width: 100%;
+  gap: 0;
+}
+.scene-frame {
+  background: #fff;
+  padding: 0.8vh;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
+  line-height: 0;
+  animation: scene-pop 0.34s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.scene-frame .scene-art {
+  display: block;
+  height: min(44vh, 38vw);
+  width: calc(min(44vh, 38vw) * 1.6);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+}
+/* Only the size pops, and only a little. The picture is never invisible or
+   tiny, so it still shows at full size even if the animation never runs on a
+   slow classroom machine or in an unfocused window. */
+@keyframes scene-pop {
+  from { transform: scale(0.88) translateY(8px); }
+  to   { transform: scale(1) translateY(0); }
+}
+.story-title { margin: 0; font-size: 3.2vh; color: #2f6fa8; }
+.story-line {
+  margin: 0;
+  font-size: 4.4vh;
+  line-height: 1.35;
+  text-align: center;
+  min-height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* the sentence sits in one inner box, so spaces between words are kept */
+.story-line .line-inner { display: block; white-space: pre-line; }
+
+/* ---- letter hunt: every letter is a target the joystick can land on ---- */
+.story-line.hunting { font-size: 5.4vh; line-height: 1.6; }
+.story-line .hl {
+  display: inline-block;
+  padding: 0 0.03em;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.story-line .hl.got { background: var(--good); color: #fff; animation: hunt-pop 0.35s ease; }
+.story-line .hl.nope { background: var(--bad); color: #fff; animation: shake 0.4s; }
+.story-line .hl.key-focus { outline-width: 5px; outline-offset: 2px; background: #fff3c9; }
+.story-line .hl.got.key-focus { background: var(--good); }
+@keyframes hunt-pop { 50% { transform: scale(1.35); } }
+
+.hunt-bar {
+  display: flex; align-items: center; justify-content: center; gap: 1.6vw;
+  font-size: 3.4vh; color: var(--ink); font-weight: bold;
+}
+.hunt-bar[hidden] { display: none; }
+.hunt-target {
+  background: var(--accent); border-radius: 14px; padding: 0.2vh 1.6vh;
+  font-size: 5vh; line-height: 1.2;
+}
+.hunt-left { color: #2f8f5b; }
+.hunt-bar.all-found .hunt-left { color: #2f8f5b; font-size: 4vh; }
+.hunt-btn.on { background: var(--good); color: #fff; }
+
+.story-line .hit {
+  color: #c0392b;
+  font-weight: bold;
+  background: #ffe9a8;
+  border-radius: 8px;
+  padding: 0 6px;
+}
+
+.story-nav { display: flex; align-items: center; gap: 3vw; }
+
+.bigbtn {
+  width: auto; min-width: max(13vh, 90px);
+  height: 9vh; min-height: 62px;
+  padding: 0 2.4vh;
+  white-space: nowrap;
+  border: none;
+  border-radius: 18px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 4.5vh;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+.bigbtn:disabled { opacity: 0.3; cursor: default; }
+.bigbtn.wide { width: auto; padding: 0 4vw; font-size: 3.4vh; }
+
+.story-dots { display: flex; gap: 12px; }
+.story-dots i {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  display: block;
+}
+.story-dots i.on { background: var(--accent); }
+
+.teacher-note { font-size: 16px; opacity: 0.6; margin: 0; }
+
+/* ---------------------------------------------------------------- find */
+.find-head {
+  display: flex;
+  align-items: center;
+  gap: 3vw;
+  flex: 0 0 auto;
+}
+.find-target {
+  width: 13vh; height: 13vh;
+  min-width: 90px; min-height: 90px;
+  border-radius: 20px;
+  background: var(--accent);
+  color: var(--ink);
+  font-size: 8vh;
+  font-weight: bold;
+  display: flex; align-items: center; justify-content: center;
+}
+.find-target.long { width: auto; min-width: 14vh; padding: 0 2vh; white-space: nowrap; font-size: 7vh; }
+.find-prompt { font-size: 3vh; max-width: 36vw; }
+.find-counter { text-align: center; }
+.find-counter-label { display: block; font-size: 2vh; opacity: 0.7; }
+.find-counter-num { font-size: 8vh; color: var(--accent); font-weight: bold; line-height: 1; }
+
+.find-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2vh 2vw;
+  flex: 0 0 auto;
+}
+
+.find-item {
+  width: 19vh; min-width: 120px;
+  height: 19vh; min-height: 120px;
+  border: 6px solid transparent;
+  border-radius: 20px;
+  background: var(--card);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.1s ease;
+}
+.find-item:hover { transform: translateY(-4px); }
+.find-item .fi-emoji { font-size: 9vh; line-height: 1; }
+.find-item .fi-word { font-size: 2.2vh; }
+.find-item.found { background: var(--good); color: #fff; }
+.find-item.found::after {
+  content: "✓";
+  position: absolute; top: 4px; right: 10px; font-size: 3vh;
+}
+.find-item.nope { background: var(--bad); animation: shake 0.4s; }
+.find-item.done { pointer-events: none; }
+
+/* ---------------------------------------------------------------- make */
+/* Everything on the Make screen is sized off one tile width, measured against
+   both the height and the width of the screen so a row of seven letters always
+   fits side by side. */
+.make-screen {
+  --tilew: min(18vh, 10.5vw);
+  --tileh: min(21vh, 12vw);
+  justify-content: space-evenly;
+  gap: 0;
+}
+
+.picture {
+  width: min(23vh, 13vw); height: min(23vh, 13vw);
+  min-width: 105px; min-height: 105px;
+  font-size: min(14vh, 8vw); line-height: 1;
+  border: none;
+  border-radius: 28px;
+  background: var(--card);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 10px 0 rgba(0, 0, 0, 0.25);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+/* the empty boxes the letters are dragged into */
+.word-slots { display: flex; gap: 1.6vw; justify-content: center; flex: 0 0 auto; }
+
+.wslot {
+  width: var(--tilew); min-width: 92px;
+  height: var(--tileh); min-height: 120px;
+  border-radius: 20px;
+  border: 6px dashed rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.wslot.filled { border-style: solid; border-color: transparent; background: transparent; }
+.wslot > .ltile.in-slot { width: 100%; height: 100%; border-radius: 16px; }
+.wslot.drop-ok { background: rgba(255, 194, 51, 0.35); border-color: var(--accent); }
+.wslot.correct > .ltile { background: var(--good); color: #fff; }
+.wslot.wrong > .ltile { background: var(--bad); animation: shake 0.4s; }
+.wslot.sounding > .ltile { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.35); }
+
+/* the shuffled letters waiting to be dragged */
+.letter-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2vh 1.2vw;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 auto;
+  /* keeps its size as tiles leave, so the board never jumps about */
+  min-height: var(--tileh);
+  padding: 1.4vh 2vw;
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.22);
+  max-width: 96vw;
+}
+
+.ltile {
+  width: var(--tilew); min-width: 92px;
+  height: var(--tileh); min-height: 108px;
+  border: none;
+  border-radius: 20px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: min(11vh, 6.4vw);
+  font-weight: bold;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+  transition: transform 0.12s ease;
+}
+.ltile:hover { transform: translateY(-4px); }
+
+/* the tile currently being carried */
+.ltile.lifted {
+  opacity: 0.35;
+  transform: scale(0.9);
+  cursor: grabbing;
+}
+
+/* copy of the tile that follows the cursor while dragging */
+.drag-ghost {
+  position: fixed;
+  z-index: 80;
+  pointer-events: none;
+  margin: 0;
+  opacity: 0.95;
+  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.45);
+  transform: rotate(-4deg) scale(1.06);
+}
+
+.carrying-note {
+  font-size: 2.4vh;
+  opacity: 0.8;
+  min-height: 3vh;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.banner { font-size: 4vh; min-height: 5.2vh; text-align: center; padding: 0 2vw; }
+.banner.good { color: var(--good); }
+.banner.bad { color: var(--bad); }
+
+/* dwell progress bar, injected into whatever the cursor is resting on */
+.dwell-bar {
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 8px; width: 0;
+  background: var(--focus);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- hint bar */
+.hint {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 7px;
+  font-size: 15px;
+  opacity: 0.6;
+  background: rgba(0, 0, 0, 0.2);
+  min-height: 30px;
+}
+
+/* ---------------------------------------------------------------- confetti */
+.confetti-layer { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.confetti {
+  position: absolute;
+  width: 14px; height: 20px;
+  top: -30px;
+  animation: fall linear forwards;
+}
+@keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+
+/* ---------------------------------------------------------------- modal */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 50;
+}
+.modal-backdrop[hidden] { display: none; }
+
+.modal {
+  background: #fff;
+  color: var(--ink);
+  border-radius: 20px;
+  padding: 22px 26px;
+  width: min(580px, 92vw);
+  max-height: 92vh;
+  overflow: auto;
+  font-family: "Segoe UI", sans-serif;
+}
+.modal h2 { margin: 0 0 14px; }
+.group-head { margin: 20px 0 2px; font-size: 17px; }
+.group-note { margin: 0 0 6px; font-size: 13px; color: #5a6b80; }
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+}
+.row select { font-size: 16px; padding: 6px 8px; min-width: 190px; }
+.row input[type="checkbox"] { width: 24px; height: 24px; }
+
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 22px;
+  font-size: 16px;
+  background: var(--bg2);
+  color: #fff;
+  cursor: pointer;
+}
+.btn.ghost { background: #e6e9ef; color: var(--ink); }
+.modal-note { font-size: 13px; color: #5a6b80; margin-top: 14px; line-height: 1.5; }
+
+/* ---------------------------------------------------------------- small screens */
+@media (max-width: 1100px) {
+  .letter-grid { grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(5, 1fr); }
+  .letter-tile .tile-emoji.drawn-pic { width: min(5.6vh, 6.2vw); height: min(5.6vh, 6.2vw); }
+  .letter-tile .tile-letter { font-size: min(4.8vh, 4.6vw); }
+  .letter-grid.blend-grid { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); }
+  .blend-grid .letter-tile .tile-emoji.drawn-pic { width: min(7vh, 8vw); height: min(7vh, 8vw); }
+  .blend-grid .letter-tile .tile-letter { font-size: min(5.6vh, 6vw); }
+  .find-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+
+/* ================================================================
+   Big classroom story page.
+   Picture and words side by side, filling the whole screen, so the
+   class can see it from the back of the room. On a squarer 4:3 screen
+   the words go under the picture instead.
+   ================================================================ */
+.story-screen .story-card {
+  width: 97vw;
+  max-width: none;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 1.5vh 2.4vw;
+  padding: 1.8vh 2vw;
+}
+.story-screen .story-pic.framed { width: auto; }
+.story-screen .scene-frame .scene-art {
+  height: min(62vh, 29vw);
+  width: calc(min(62vh, 29vw) * 1.6);
+}
+.story-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.4vh;
+  min-width: 0;
+  height: 100%;
+}
+.story-screen .story-title { font-size: 3.8vh; text-align: center; }
+.story-screen .story-line {
+  font-size: 5.6vh;
+  line-height: 1.45;
+  min-height: 0;
+}
+.story-screen .story-line.hunting { font-size: 6.4vh; line-height: 1.6; }
+.story-screen .hunt-bar { font-size: 3.6vh; flex-wrap: wrap; }
+.story-screen .story-line.long { font-size: 5.4vh; }
+.story-screen .story-line.long.hunting { font-size: 5.4vh; line-height: 1.5; }
+.story-screen .teacher-note { display: none; }
+.story-screen .bigbtn { height: 9.5vh; }
+
+@media (max-aspect-ratio: 3/2) {
+  .story-screen .story-card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-content: center;
+  }
+  .story-screen .scene-frame .scene-art {
+    height: min(44vh, 56vw);
+    width: calc(min(44vh, 56vw) * 1.6);
+  }
+  .story-text { height: auto; gap: 1.2vh; }
+  .story-screen .story-line { font-size: 5vh; }
+  .story-screen .story-line.hunting { font-size: 5.2vh; }
+}
+
+/* voice test in Teacher Settings */
+.voice-test { gap: 14px; justify-content: flex-start; }
+.voice-status { font-size: 15px; line-height: 1.35; }
+.voice-status.ok { color: #1f7a45; }
+.voice-status.bad { color: #b3261e; }
+.read-btn { background: #6ec6ff; }
+.read-btn.speaking { background: var(--good); color: #fff; }
+
+/* the word being read aloud right now */
+.story-line .w { border-radius: 8px; transition: background 0.08s, box-shadow 0.08s; }
+.story-line .w.now,
+.story-line .hit .w.now {
+  background: #2f80ed;
+  box-shadow: 0 0 0 5px #2f80ed;
+  color: #fff;
+}
+
+
+
+/* ---------------------------------------------------------------- match
+   Pictures across the top, their words jumbled underneath; a line is drawn
+   from each picture down to its word once it is matched. */
+.match-board {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12vh;
+  flex: 0 0 auto;
+}
+.match-row { display: flex; gap: 3vw; justify-content: center; position: relative; z-index: 1; }
+.match-lines {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0; overflow: visible;
+}
+.match-lines line { stroke: var(--good); stroke-width: 1.1vh; stroke-linecap: round; }
+.match-lines line.pending { stroke: var(--accent); stroke-dasharray: 2vh 1.6vh; }
+.match-pic, .match-word {
+  border: 6px solid transparent;
+  border-radius: 20px;
+  background: var(--card);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  transition: transform 0.1s ease;
+}
+.match-pic { width: min(22vh, 19vw); height: min(22vh, 19vw); }
+.match-pic .mp-emoji { font-size: min(15vh, 13vw); line-height: 1; }
+.match-pic .mp-emoji.drawn-pic { width: min(17vh, 15vw); height: min(17vh, 15vw); }
+.match-word {
+  width: min(22vh, 19vw); min-height: 11vh; padding: 1vh 0.6vw;
+  font-size: min(5.2vh, 3.6vw); font-weight: bold;
+  overflow-wrap: anywhere;
+}
+.match-word.small { font-size: min(3.8vh, 2.7vw); }
+.match-pic:hover, .match-word:hover { transform: translateY(-4px); }
+.match-pic.chosen, .match-word.chosen { background: #fff3c4; border-color: var(--accent); transform: translateY(-6px); }
+.match-pic.matched, .match-word.matched { background: var(--good); color: #fff; cursor: default; }
+.match-pic.matched::after {
+  content: "✓"; position: absolute; top: 4px; right: 10px; font-size: 3.4vh; color: #fff;
+}
+.match-pic.nope, .match-word.nope { background: var(--bad); animation: shake 0.4s; }
+.match-end[hidden] { display: none; }
+.match-end { display: flex; gap: 3vw; justify-content: center; flex: 0 0 auto; }
+
+/* ---------------------------------------------------------------- quiz
+   Word / Picture / Sound: a question (big picture or big word) and three
+   answers underneath. */
+.quiz-question { display: flex; align-items: center; justify-content: center; gap: 2vw; flex: 0 0 auto; }
+.quiz-question[hidden] { display: none; }
+.quiz-pic {
+  width: 30vh; height: 30vh; border-radius: 24px; background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
+}
+.quiz-pic .qp-emoji { font-size: 22vh; line-height: 1; }
+.quiz-pic .qp-emoji.drawn-pic { width: 25vh; height: 25vh; }
+.quiz-word {
+  min-width: 34vh; padding: 2vh 4vh; border-radius: 24px; background: var(--card);
+  color: var(--ink); font-size: 12vh; font-weight: bold; line-height: 1.1; text-align: center;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
+}
+.quiz-word.small { font-size: 8vh; }
+.say-btn {
+  width: 11vh; height: 11vh; border-radius: 50%; border: 5px solid transparent;
+  background: var(--accent); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.25); font-size: 6vh; padding: 0;
+}
+.say-btn .drawn-pic { width: 7.5vh; height: 7.5vh; }
+.quiz-options { display: flex; gap: 3vw; justify-content: center; flex: 0 0 auto; }
+.quiz-opt {
+  border: 6px solid transparent; border-radius: 20px; background: var(--card); color: var(--ink);
+  cursor: pointer; font-family: inherit; box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25);
+  display: flex; align-items: center; justify-content: center; position: relative;
+  transition: transform 0.1s ease;
+}
+.quiz-opt:hover { transform: translateY(-4px); }
+.quiz-opt.word { width: min(30vh, 26vw); min-height: 13vh; font-size: min(7vh, 5vw); font-weight: bold; padding: 1vh; }
+.quiz-opt.word.small { font-size: min(5vh, 3.6vw); }
+.quiz-opt.pic { width: min(28vh, 24vw); height: min(28vh, 24vw); }
+.quiz-screen.big-pics .quiz-opt.pic { width: min(36vh, 26vw); height: min(36vh, 26vw); }
+.quiz-opt .qo-emoji { font-size: min(18vh, 15vw); line-height: 1; }
+.quiz-opt .qo-emoji.drawn-pic { width: 78%; height: 78%; }
+.quiz-opt.right { background: var(--good); color: #fff; }
+.quiz-opt.right::after { content: "✓"; position: absolute; top: 4px; right: 10px; font-size: 3.4vh; color: #fff; }
+.quiz-opt.nope { background: var(--bad); animation: shake 0.4s; }
+
+/* ---------------------------------------------------------------- memory */
+.mem-grid { display: grid; grid-template-columns: repeat(4, auto); gap: 2.4vh 2.4vw; flex: 0 0 auto; }
+.mem-card {
+  width: min(24vh, 20vw); height: min(24vh, 20vw);
+  border: 6px solid transparent; border-radius: 20px; cursor: pointer; font-family: inherit;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.25); position: relative; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: repeating-linear-gradient(45deg, #9b6ad6 0 14px, #8a58c8 14px 28px);
+  color: #fff; font-size: min(10vh, 8vw); font-weight: bold;
+  transition: transform 0.1s ease;
+}
+.mem-card:hover { transform: translateY(-4px); }
+.mem-card.up { background: var(--card); color: var(--ink); animation: flip 0.25s ease; }
+.mem-card.up.word-card { font-size: min(5.6vh, 4.2vw); padding: 1vh; }
+.mem-card.up.word-card.small { font-size: min(4.2vh, 3.2vw); }
+.mem-card .mc-emoji { font-size: min(16vh, 13vw); line-height: 1; }
+.mem-card .mc-emoji.drawn-pic { width: 78%; height: 78%; }
+.mem-card.got { background: var(--good); color: #fff; cursor: default; }
+.mem-card.miss { background: #ffe1e1; }
+@keyframes flip { from { transform: scaleX(0.1); } to { transform: scaleX(1); } }
